@@ -1,6 +1,6 @@
 const I=n=>IMG[n+'.jpg'];
 document.querySelectorAll('[data-img]').forEach(e=>e.src=I(e.dataset.img));
-$h=document.getElementById('home');$h.style.backgroundImage='url('+I('menu_bg')+')';document.querySelector('link[rel=icon]').href=I('icon');
+$h=document.getElementById('home');$h.style.backgroundImage='url('+I('menu_bg')+')';
 const $=s=>document.querySelector(s),A='assets/';
 let S,tmr,ac,hl={},toastT;
 const go=id=>document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));
@@ -43,10 +43,9 @@ const STEPS=[
 ];
 function start(){
   S={w:0,inv:[],f:{},sel:null,hints:0,t:2700};hl={};
-  $('#wimg').src=I(W[0].img);$('#game').classList.remove('pw','em');
-  $('#over').classList.remove('on');$('#fox').classList.remove('on');
-  draw();inv();tick();clearInterval(tmr);tmr=setInterval(tick,1000);go('game');
-  T('חפש בחדר. לחץ על חפצים, סובב עם החצים.')}
+  $('#game').classList.remove('pw','em');$('#over').classList.remove('on');$('#fox').classList.remove('on');
+  buildRoom();inv();tick();clearInterval(tmr);tmr=setInterval(tick,1000);go('game');layout();
+  T('גרור עם האצבע כדי להסתובב 360° בחדר. לחץ על חפצים.')}
 function tick(){
   if(!$('#game').classList.contains('on')||S.f.win)return;
   if(S.t<=0){clearInterval(tmr);over();return}
@@ -54,17 +53,6 @@ function tick(){
   $('#time').textContent=m+':'+s;$('#game').classList.toggle('em',S.t<300);
   if(S.t<300&&S.t%2==0)beep(300,.05,'square')}
 function over(){$('#ot').textContent='הזמן נגמר!';$('#op').textContent='הדלת ננעלה... אבל אפשר להמשיך עוד 5 דקות.';$('#ob').textContent='עוד 5 דקות';$('#ob').onclick=()=>{S.t=300;$('#over').classList.remove('on');tmr=setInterval(tick,1000)};$('#over').classList.add('on')}
-function draw(){
-  $('#wimg').src=I(W[S.w].img);$('#dirs').textContent='קיר '+NAMES[S.w];
-  const h=$('#hs');h.innerHTML='';
-  W[S.w].hs.forEach(([x,y,w,hh,fn])=>{const d=document.createElement('div');d.className='hs';d.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${hh}%`;d.onclick=()=>{beep(420,.05);fn()};h.append(d)})}
-function turn(d){
-  const w=$('#wall');w.classList.add(d>0?'tr':'tl');beep(250,.1,'triangle');
-  setTimeout(()=>{S.w=(S.w+d+4)%4;draw();w.classList.remove('tr','tl');w.classList.add(d>0?'tl':'tr');void w.offsetWidth;w.classList.remove('tl','tr')},220)}
-$('#next').onclick=()=>turn(1);$('#prev').onclick=()=>turn(-1);
-let sx=null;const st=$('#stage');
-st.onpointerdown=e=>sx=e.clientX;
-st.onpointerup=e=>{if(sx!=null&&Math.abs(e.clientX-sx)>70)turn(e.clientX<sx?1:-1);sx=null};
 function inv(){
   const b=$('#inv');b.innerHTML=S.inv.length?'':'<i>התיק ריק. חפש חפצים בחדר</i>';
   S.inv.forEach(k=>{const d=document.createElement('div');d.className='it'+(S.sel==k?' sel':'');d.title=ITEMS[k];
@@ -142,3 +130,26 @@ function door(){
   $('#stars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
   $('#stats').textContent=`זמן: ${String(used/60|0)} דק׳ ${used%60} שנ׳ · רמזים: ${S.hints}`;
   setTimeout(()=>go('end'),600)}
+
+/* ---------- 360° ---------- */
+let yaw=0,pit=0,vel=0,drag=null,moved=0,PZ=300;
+function buildRoom(){
+  const r=$('#room');r.innerHTML='';
+  W.forEach((w,i)=>{const f=document.createElement('div');f.className='face';f.innerHTML=`<img src="${I(w.img)}">`;
+    w.hs.forEach(([x,y,ww,hh,fn])=>{const d=document.createElement('div');d.className='hs';d.style.cssText=`left:${x}%;top:${y}%;width:${ww}%;height:${hh}%`;d.onclick=()=>{if(moved>8)return;beep(420,.05);fn()};f.append(d)});
+    r.append(f)});yaw=0;pit=0;vel=0}
+function layout(){
+  const st=$('#stage'),sw=st.clientWidth,sh=st.clientHeight;if(!sw||!sh)return;
+  const Wd=Math.max(sh*.8,sw),H=Wd*1.25;PZ=Wd/2;st.style.setProperty('--P',PZ+'px');
+  document.querySelectorAll('.face').forEach((f,i)=>{f.style.cssText=`--W:${Wd}px;--H:${H}px;transform:rotateY(${-90*i}deg) translateZ(${-Wd/2}px)`});spin()}
+function spin(){
+  $('#room').style.transform=`translateZ(${PZ}px) rotateX(${pit}deg) rotateY(${yaw}deg)`;
+  $('#dirs').textContent='קיר '+NAMES[((Math.round(yaw/90)%4)+4)%4]}
+$('#stage').onpointerdown=e=>{drag={x:e.clientX,y:e.clientY};moved=0;vel=0};
+window.onpointermove=e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY};moved+=Math.abs(dx)+Math.abs(dy);vel=-dx*.3;yaw+=vel;pit=Math.max(-18,Math.min(18,pit+dy*.15));spin()};
+window.onpointerup=window.onpointercancel=()=>{drag=null};
+(function L(){if(!drag&&Math.abs(vel)>.02){yaw+=vel;vel*=.93;spin()}requestAnimationFrame(L)})();
+window.onresize=layout;
+/* ---------- מודעת פתיחה ---------- */
+try{if(!localStorage.getItem('ld_seen'))$('#intro').classList.add('on')}catch(e){$('#intro').classList.add('on')}
+$('#introBtn').onclick=()=>{$('#intro').classList.remove('on');try{localStorage.setItem('ld_seen','1')}catch(e){}};

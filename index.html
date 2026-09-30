@@ -5,14 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0B1622">
 <title>Lockdown – חדר בריחה</title>
-<link rel="icon" href="assets/icon.jpg">
-<link rel="apple-touch-icon" href="assets/icon.jpg">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lockdown">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="intro"><div class="card"><img data-img="fox1" alt=""><h2>ברוכים הבאים ל־Lockdown</h2><p>חדר בריחה דיגיטלי: אתם נעולים בחדר סודי, והזמן רץ.</p><ul><li><b>המטרה:</b> לפתור חידות ולברוח לפני שנגמר הזמן.</li><li><b>איך:</b> גוררים באצבע כדי להסתובב 360° בחדר, ולוחצים על חפצים.</li><li><b>עזרה:</b> אוספים חפצים, מחברים רמזים, ולוחצים "רמז" אם נתקעתם.</li></ul><button class="btn red" id="introBtn">בואו נתחיל</button></div></div>
 <section id="home" class="scr on">
   <img class="logo" data-img="logo" alt="Lockdown">
+  <p class="tg">THINK &nbsp;/&nbsp; FIND &nbsp;/&nbsp; ESCAPE</p>
   <div class="menu">
     <button class="btn red" data-go="cats">שחק</button>
     <button class="btn cy" data-go="how">הוראות</button>
@@ -52,9 +58,7 @@
     <button class="mini hintb" id="hintBtn">רמז</button>
   </div>
   <div id="stage">
-    <div id="wall"><img id="wimg" alt=""><div id="hs"></div></div>
-    <button class="arr l" id="prev">›</button>
-    <button class="arr r" id="next">‹</button>
+    <div id="room"></div>
     <div id="dirs"></div>
   </div>
   <div id="fox"><img id="foxi" data-img="fox0" alt=""><p id="foxt"></p></div>
