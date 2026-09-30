@@ -12,7 +12,7 @@
 </head>
 <body>
 <section id="home" class="scr on">
-  <img class="logo" src="assets/logo.jpg" alt="Lockdown">
+  <img class="logo" data-img="logo" alt="Lockdown">
   <div class="menu">
     <button class="btn red" data-go="cats">שחק</button>
     <button class="btn cy" data-go="how">הוראות</button>
@@ -37,7 +37,7 @@
 </section>
 
 <section id="story" class="scr pad center">
-  <img class="fox" src="assets/fox1.jpg" alt="שועל">
+  <img class="fox" data-img="fox1" alt="שועל">
   <h2>בונקר 13</h2>
   <p class="story">התעוררת בתוך בונקר תת־קרקעי. ההתראה מצפצפת: <b>הדלת תינעל לתמיד בעוד 45 דקות.</b></p>
   <p class="story">"כאן שועל. מישהו רצה שתגיע לכאן. תחקור, תחבר את הרמזים, ותמצא את הדרך החוצה. אני איתך ברדיו."</p>
@@ -57,7 +57,7 @@
     <button class="arr r" id="next">‹</button>
     <div id="dirs"></div>
   </div>
-  <div id="fox"><img id="foxi" src="assets/fox0.jpg" alt=""><p id="foxt"></p></div>
+  <div id="fox"><img id="foxi" data-img="fox0" alt=""><p id="foxt"></p></div>
   <div id="inv"></div>
   <div id="toast"></div>
   <div id="modal"><div id="mbox"><button class="x" id="mx">✕</button><div id="mbody"></div></div></div>
@@ -72,6 +72,7 @@
   <button class="btn red" id="again">שחק שוב</button>
   <button class="btn ghost" data-go="cats">לתפריט</button>
 </section>
+<script src="assets.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

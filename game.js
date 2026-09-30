@@ -1,3 +1,6 @@
+const I=n=>IMG[n+'.jpg'];
+document.querySelectorAll('[data-img]').forEach(e=>e.src=I(e.dataset.img));
+$h=document.getElementById('home');$h.style.backgroundImage='url('+I('menu_bg')+')';document.querySelector('link[rel=icon]').href=I('icon');
 const $=s=>document.querySelector(s),A='assets/';
 let S,tmr,ac,hl={},toastT;
 const go=id=>document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));
@@ -13,7 +16,7 @@ const NAMES=['צפון','מזרח','דרום','מערב'];
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{beep(500,.06);go(b.dataset.go)});
 [['vault','כספות ושודדים'],['bunker','בונקרים'],['lab','מעבדות סודיות'],['space','חלל ועתיד'],['tomb','מסתורין ועתיק']].forEach(([k,n])=>{
   const ok=k=='bunker',d=document.createElement('div');d.className='cat '+(ok?'ok':'lock');
-  d.innerHTML=`<img src="${A}card_${k}.jpg"><div><b>${n}</b><span>${ok?'בונקר 13 · 45 דק׳':'🔒 בקרוב'}</span></div>`;
+  d.innerHTML=`<img src="${I(`card_${k}`)}"><div><b>${n}</b><span>${ok?'בונקר 13 · 45 דק׳':'🔒 בקרוב'}</span></div>`;
   d.onclick=()=>ok?go('story'):T('הקטגוריה הזאת תיפתח בקרוב');
   $('#catlist').append(d)});
 $('#startBtn').onclick=start;$('#again').onclick=start;
@@ -40,7 +43,7 @@ const STEPS=[
 ];
 function start(){
   S={w:0,inv:[],f:{},sel:null,hints:0,t:2700};hl={};
-  $('#wimg').src=A+W[0].img+'.jpg';$('#game').classList.remove('pw','em');
+  $('#wimg').src=I(W[0].img);$('#game').classList.remove('pw','em');
   $('#over').classList.remove('on');$('#fox').classList.remove('on');
   draw();inv();tick();clearInterval(tmr);tmr=setInterval(tick,1000);go('game');
   T('חפש בחדר. לחץ על חפצים, סובב עם החצים.')}
@@ -52,7 +55,7 @@ function tick(){
   if(S.t<300&&S.t%2==0)beep(300,.05,'square')}
 function over(){$('#ot').textContent='הזמן נגמר!';$('#op').textContent='הדלת ננעלה... אבל אפשר להמשיך עוד 5 דקות.';$('#ob').textContent='עוד 5 דקות';$('#ob').onclick=()=>{S.t=300;$('#over').classList.remove('on');tmr=setInterval(tick,1000)};$('#over').classList.add('on')}
 function draw(){
-  $('#wimg').src=A+W[S.w].img+'.jpg';$('#dirs').textContent='קיר '+NAMES[S.w];
+  $('#wimg').src=I(W[S.w].img);$('#dirs').textContent='קיר '+NAMES[S.w];
   const h=$('#hs');h.innerHTML='';
   W[S.w].hs.forEach(([x,y,w,hh,fn])=>{const d=document.createElement('div');d.className='hs';d.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${hh}%`;d.onclick=()=>{beep(420,.05);fn()};h.append(d)})}
 function turn(d){
@@ -65,7 +68,7 @@ st.onpointerup=e=>{if(sx!=null&&Math.abs(e.clientX-sx)>70)turn(e.clientX<sx?1:-1
 function inv(){
   const b=$('#inv');b.innerHTML=S.inv.length?'':'<i>התיק ריק. חפש חפצים בחדר</i>';
   S.inv.forEach(k=>{const d=document.createElement('div');d.className='it'+(S.sel==k?' sel':'');d.title=ITEMS[k];
-    d.innerHTML=`<img src="${A}i_${k}.jpg">`;
+    d.innerHTML=`<img src="${I(`i_${k}`)}">`;
     d.onclick=()=>{S.sel=S.sel==k?null:k;inv();if(S.sel)T('נבחר: '+ITEMS[k]+'. לחץ על מקום בחדר');if(k=='wheel')wheelV()};b.append(d)})}
 const add=k=>{if(!S.inv.includes(k))S.inv.push(k);S.f[k]=1;beep(880,.15);T('מצאת: '+ITEMS[k]);inv()};
 const use=k=>{S.inv=S.inv.filter(i=>i!=k);S.sel=null;inv()};
@@ -74,7 +77,7 @@ const use=k=>{S.inv=S.inv.filter(i=>i!=k);S.sel=null;inv()};
 $('#hintBtn').onclick=()=>{
   const i=STEPS.findIndex(([k])=>!S.f[k]);if(i<0)return;
   const l=hl[i]=Math.min((hl[i]||0)+1,3);S.hints++;
-  $('#foxi').src=A+'fox'+(l==1?0:l==2?1:2)+'.jpg';$('#foxt').textContent=STEPS[i][1][l-1];
+  $('#foxi').src=I('fox'+(l==1?0:l==2?1:2));$('#foxt').textContent=STEPS[i][1][l-1];
   $('#fox').classList.add('on');clearTimeout(S.ft);S.ft=setTimeout(()=>$('#fox').classList.remove('on'),9000);beep(520,.15)};
 $('#fox').onclick=()=>$('#fox').classList.remove('on');
 
@@ -96,7 +99,7 @@ function wires(){
       if(n==6){S.f.power=1;$('#game').classList.add('pw');morse('...');T('הגנרטור התניע! החשמל חזר.');setTimeout(close,900)}}
     else{n=0;document.querySelectorAll('.w').forEach(x=>x.classList.remove('d'));beep(150,.25,'sawtooth');T('הסדר שגוי. מתחילים מחדש')}})}
 function radio(){
-  M(`<img class="big" src="${A}radio.jpg"><div class="disp" id="rd">— — —</div><p>שמאל: <b id="lv">0</b></p><input type="range" id="rl" min="0" max="9" value="0"><p>ימין: <b id="rv">0</b></p><input type="range" id="rr" min="0" max="9" value="0"><p id="rm" style="color:var(--cy)"></p>`);
+  M(`<img class="big" src="${I(`radio`)}"><div class="disp" id="rd">— — —</div><p>שמאל: <b id="lv">0</b></p><input type="range" id="rl" min="0" max="9" value="0"><p>ימין: <b id="rv">0</b></p><input type="range" id="rr" min="0" max="9" value="0"><p id="rm" style="color:var(--cy)"></p>`);
   const chk=()=>{const l=+$('#rl').value,r=+$('#rr').value;$('#lv').textContent=l;$('#rv').textContent=r;
     if(!S.f.power){$('#rd').textContent='אין חשמל';return}
     if(l==4&&r==7){$('#rd').textContent='23 → 61 → 47';$('#rm').textContent='משדר: "הסדר הנכון: עשרים ושלוש, שישים ואחד, ארבעים ושבע."';S.f.order=1;morse('.-.. -.-.');}
@@ -109,16 +112,16 @@ function vent(){
 function mapP(){
   if(S.f.wheel)return T('המפה שלמה. מאחוריה היה גלגל הצפנה.');
   let t=[...Array(9).keys()];do{t.sort(()=>Math.random()-.5)}while(t.every((v,i)=>v==i));let sel=-1;
-  const r=()=>{$('#mg').innerHTML=t.map((v,i)=>`<button data-i="${i}" class="${sel==i?'s':''}" style="background-image:url(${A}m${v}.jpg)"></button>`).join('');
+  const r=()=>{$('#mg').innerHTML=t.map((v,i)=>`<button data-i="${i}" class="${sel==i?'s':''}" style="background-image:url(${I(`m${v}`)})"></button>`).join('');
     document.querySelectorAll('#mg button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;beep(480,.05);
       if(sel<0)sel=i;else{[t[sel],t[i]]=[t[i],t[sel]];sel=-1}r();
       if(t.every((v,k)=>v==k)){beep(1000,.3);setTimeout(()=>{close();add('wheel')},700);T('המפה הושלמה! מאחוריה מסתתר משהו...')}})};
   M(`<h3>מפה קרועה</h3><p>לחץ על שתי חתיכות כדי להחליף ביניהן. הקו האדום חייב להתחבר, מהעיגול ועד ה־X.</p><div class="map" id="mg"></div>`);r()}
-function wheelV(){M(`<h3>גלגל הצפנה</h3><img class="big" src="${A}i_wheel.jpg" style="max-width:200px;margin:auto"><p>שלושה סמלים בוהקים באדום: <b style="font-size:1.6rem;color:var(--red)">✶ ← ≈ ← ☀</b></p><p>אולי זה הסדר לפאנל בכספת.</p>`)}
+function wheelV(){M(`<h3>גלגל הצפנה</h3><img class="big" src="${I(`i_wheel`)}" style="max-width:200px;margin:auto"><p>שלושה סמלים בוהקים באדום: <b style="font-size:1.6rem;color:var(--red)">✶ ← ≈ ← ☀</b></p><p>אולי זה הסדר לפאנל בכספת.</p>`)}
 function safe(){
   if(S.f.card)return T('הכספת ריקה.');
   const sy=['✶','⛰','◎','≈','๑','☀'];let d=[0,0,0],q=[];
-  M(`<div class="door" id="sd"><img class="big" src="${A}safe.jpg"></div><div class="dial">${[0,1,2].map(i=>`<div><button data-u="${i}">+</button><b id="d${i}">00</b><button data-d="${i}">−</button></div>`).join('')}</div><div class="row">${sy.map((s,i)=>`<button class="sy" data-s="${i}">${s}</button>`).join('')}</div><button class="btn red" id="op2" style="width:100%">נסה לפתוח</button>`);
+  M(`<div class="door" id="sd"><img class="big" src="${I(`safe`)}"></div><div class="dial">${[0,1,2].map(i=>`<div><button data-u="${i}">+</button><b id="d${i}">00</b><button data-d="${i}">−</button></div>`).join('')}</div><div class="row">${sy.map((s,i)=>`<button class="sy" data-s="${i}">${s}</button>`).join('')}</div><button class="btn red" id="op2" style="width:100%">נסה לפתוח</button>`);
   const up=()=>d.forEach((v,i)=>$('#d'+i).textContent=String(v).padStart(2,'0'));
   document.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{d[+b.dataset.u]=(d[+b.dataset.u]+1)%100;up();beep(700,.03)});
   document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{d[+b.dataset.d]=(d[+b.dataset.d]+99)%100;up();beep(600,.03)});

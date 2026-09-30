@@ -6,7 +6,7 @@ html,body{margin:0;height:100%;background:var(--navy);color:var(--lt);font-famil
 @keyframes fi{from{opacity:0}}
 .pad{padding:24px 18px;overflow-y:auto;gap:14px}.center{align-items:center;text-align:center}
 h2{font-size:1.7rem;margin:6px 0;text-align:center;letter-spacing:.5px}
-#home{background:#000 url(assets/menu_bg.jpg) center/cover;align-items:center}
+#home{background:#000 center/cover;align-items:center}
 .logo{width:92%;max-width:480px;margin-top:14vh;mix-blend-mode:screen;animation:glow 3s infinite alternate}
 @keyframes glow{to{filter:drop-shadow(0 0 14px #ff2d3d99)}}
 .menu{margin-top:auto;width:100%;max-width:340px;padding:0 24px 12vh;display:flex;flex-direction:column;gap:14px}
